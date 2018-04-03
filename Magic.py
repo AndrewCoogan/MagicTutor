@@ -12,13 +12,37 @@ strategies.
 """
 
 import json
-import pandas
-from pprint import pprint
+import math
+import pandas as pd
+import numpy as np
 
 with open('/Users/andrewcoogan/Documents/Source Control/'+
                       'MagicTutor/AllCards.json') as data_file:    
-    magic_data = json.load(data_file)
+    magic_data_json = json.load(data_file)
 
-type(magic_data)
+### Remove Gleemax as it has a CMC of 100k and will blow out the scaling later
+del magic_data_json["Gleemax"]
+#  We should remove all "schemes" and all other non legal cards (best efforts)
+#  Remove all "types" that are ""
 
-test = pandas.dataframe.from_dict(magic_data)
+md_df = pd.DataFrame.from_dict(magic_data_json).transpose()
+md_df.replace(math.nan, 0)
+
+tt = md_df.types.str.match('*token card*')
+
+
+md_df['types2'] = [item for sublist in md_df.types for item in sublist]
+
+# For this I want to take all of the 'types' and give them their own row
+#  The elements of that row will be 1 or 0 if each card possesses that type
+
+flat_list = list()
+
+temp = md_df.head(20)
+
+#flat_list = [item for sublist in temp.types for item in sublist]
+
+for sublist in temp.types:
+    print(sublist)
+    for item in sublist:
+        flat_list.append(item)
