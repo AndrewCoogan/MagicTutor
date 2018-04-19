@@ -1,0 +1,1 @@
+This is a project I am working on alongside my certificate in Data Science from UW.  This will be a program that recommends magic cards based on currently popular cards and meta data pulled from the cards themselves.
